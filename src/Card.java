@@ -1,144 +1,112 @@
-import java.util.Map;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Arrays;
+import java.util.Set;
 
 public class Card {
 
-    private final int suit;
-    private final int value;
+    // The value and suit of the card
+    private final String value;
+    private final String suit;
 
-    public static final int SPADES = 0;
-    public static final int CLUBS = 1;
-    public static final int DIAMONDS = 2;
-    public static final int HEARTS = 3;
+    // Sets that contain all of the valid values and suits
+    // Used to validate the values passed to the constructor
+    private Set<String> validValues;
+    private Set<String> validSuits;
 
-    public static final int ACE = 1;
-    public static final int TWO = 2;
-    public static final int THREE = 3;
-    public static final int FOUR = 4;
-    public static final int FIVE = 5;
-    public static final int SIX = 6;
-    public static final int SEVEN = 7;
-    public static final int EIGHT = 8;
-    public static final int NINE = 9;
-    public static final int TEN = 10;
-    public static final int JACK = 11;
-    public static final int QUEEN = 12;
-    public static final int KING = 13;
+    // Publically declare the strings that represent
+    // the suits and values to ease use of the class
+    public static final String ACE = "A";
+    public static final String TWO = "2";
+    public static final String THREE = "3";
+    public static final String FOUR = "4";
+    public static final String FIVE = "5";
+    public static final String SIX = "6";
+    public static final String SEVEN = "7";
+    public static final String EIGHT = "8";
+    public static final String NINE = "9";
+    public static final String TEN = "10";
+    public static final String JACK = "J";
+    public static final String QUEEN = "Q";
+    public static final String KING = "K";
 
-    //Mappings from string to int and int to string for suits
-    private Map<String, Integer> SIsuits;
-    private Map<Integer, String> ISsuits;
+    public static final String SPADES = "s";
+    public static final String CLUBS = "c";
+    public static final String DIAMONDS = "d";
+    public static final String HEARTS = "h";
 
-    //Mapping from string to int and int to string for values
-    private Map<String, Integer> SIvalues;
-    private Map<Integer, String> ISvalues;
+    public Card(String value, String suit){
+        initializeSets();
 
+        if(!validValues.contains(value)) throw new IllegalArgumentException(value);
+        if(!validSuits.contains(suit)) throw new IllegalArgumentException(suit);
 
-    public Card(int suit, int value){
-        initializeMappings();
-        this.suit = suit;
         this.value = value;
+        this.suit = suit;
     }
 
-    public Card(String suit, String value){
-        initializeMappings();
-        this.suit = getSuitNumber(suit);
-        this.value = getValueNumber(value);
+    public Card(String card){
+        String tempValue = card.substring(0, card.length() - 1);
+        String tempSuit = card.substring(card.length() - 1, card.length());
+
+        if(!validValues.contains(tempValue)) throw new IllegalArgumentException(tempValue);
+        if(!validSuits.contains(tempSuit)) throw new IllegalArgumentException(tempSuit);
+
+        this.value = tempValue;
+        this.suit = tempSuit;
     }
 
-    public int getSuit(){
+    public String getSuit(){
         return suit;
     }
 
-    public int getValue(){
+    public String getValue(){
         return value;
     }
 
-    public int getSuitNumber(String suit){
-        return SIsuits.get(suit);
-    }
-
-    public String getSuitString(int suit){
-        return ISsuits.get(suit);
-    }
-
-    public int getValueNumber(String value){
-        return SIvalues.get(value);
-    }
-
-    public String getValueString(int value){
-        return ISvalues.get(value);
-    }
-
+    @Override
     public String toString(){
-        return getValueString(value) + getSuitString(suit);
+        char suitChar = (char)'\u2660';
+
+        switch (suit){
+            case CLUBS:
+                suitChar = (char)'\u2663';
+                break;
+            case DIAMONDS:
+                suitChar = (char)'\u2666';
+                break;
+            case HEARTS:
+                suitChar = (char)'\u2764';
+        }
+
+        return value + suitChar;
     }
 
-    private void initializeMappings(){
-        SIsuits = new HashMap<>();
-        ISsuits = new HashMap<>();
-        SIvalues = new HashMap<>();
-        ISvalues = new HashMap<>();
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof Card){
+            Card comparisonCard = (Card)o;
+            if(suit.equals(comparisonCard.getSuit())){
+                if(value.equals(comparisonCard.getValue())){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-        SIvalues.put("A", 1);
-        SIvalues.put("a", 1);
-        SIvalues.put("ace", 1);
-        SIvalues.put("ACE", 1);
-        SIvalues.put("2", 2);
-        SIvalues.put("3", 3);
-        SIvalues.put("4", 4);
-        SIvalues.put("5", 5);
-        SIvalues.put("6", 6);
-        SIvalues.put("7", 7);
-        SIvalues.put("8", 8);
-        SIvalues.put("9", 9);
-        SIvalues.put("10", 10);
-        SIvalues.put("J", 11);
-        SIvalues.put("j", 11);
-        SIvalues.put("Q", 12);
-        SIvalues.put("q", 12);
-        SIvalues.put("QUEEN", 12);
-        SIvalues.put("queen", 12);
-        SIvalues.put("K", 13);
-        SIvalues.put("k", 13);
-        SIvalues.put("KING", 13);
-        SIvalues.put("king", 13);
+    @Override
+    public int hashCode(){
+        return Objects.hash(value, suit);
+    }
+
+    private void initializeSets(){
+        String [] suitsArray =  {SPADES, CLUBS, DIAMONDS, HEARTS};
+        String [] valuesArray = {ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN,
+                                 EIGHT, NINE, TEN, JACK, QUEEN, KING};
 
 
-        ISvalues.put(1, "A");
-        ISvalues.put(2, "2");
-        ISvalues.put(3, "3");
-        ISvalues.put(4, "4");
-        ISvalues.put(5, "5");
-        ISvalues.put(6, "6");
-        ISvalues.put(7, "7");
-        ISvalues.put(8, "8");
-        ISvalues.put(9, "9");
-        ISvalues.put(10, "10");
-        ISvalues.put(11, "J");
-        ISvalues.put(12, "Q");
-        ISvalues.put(13, "K");
-
-        SIsuits.put("S", 0);
-        SIsuits.put("s", 0);
-        SIsuits.put("SPADES", 0);
-        SIsuits.put("spades", 0);
-        SIsuits.put("C", 1);
-        SIsuits.put("c", 1);
-        SIsuits.put("CLUBS", 1);
-        SIsuits.put("spades", 1);
-        SIsuits.put("D", 2);
-        SIsuits.put("d", 2);
-        SIsuits.put("DIAMONDS", 2);
-        SIsuits.put("diamonds", 2);
-        SIsuits.put("H", 3);
-        SIsuits.put("h", 3);
-        SIsuits.put("HEARTS", 3);
-        SIsuits.put("hearts", 3);
-
-        ISsuits.put(0, "s");
-        ISsuits.put(1, "c");
-        ISsuits.put(2, "d");
-        ISsuits.put(3, "h");
+        validSuits = new HashSet(Arrays.asList(suitsArray));
+        validValues = new HashSet(Arrays.asList(valuesArray));
     }
 }
