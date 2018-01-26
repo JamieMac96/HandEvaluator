@@ -1,13 +1,16 @@
 import java.util.LinkedList;
 import java.util.Collections;
-import java.util.List;
 
 public class Deck {
 
-    private List<Card> deck;
+    private LinkedList<Card> deck;
 
     public Deck(){
         initializeDeck();
+    }
+
+    public Card pop(){
+        return deck.pop();
     }
 
     public void removeCard(Card card){
@@ -32,14 +35,7 @@ public class Deck {
 
     @Override
     public String toString(){
-        StringBuilder stringifiedDeck = new StringBuilder();
-
-        for(Card c: deck){
-            stringifiedDeck.append(c.toString()).append("  ");
-
-        }
-
-        return stringifiedDeck.toString();
+        return deck.toString();
     }
 
     private void initializeDeck(){
