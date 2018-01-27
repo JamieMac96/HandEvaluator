@@ -14,19 +14,12 @@ public class Deck {
     }
 
     public void removeCard(Card card){
-        for(Card deckCard: deck){
-            if(deckCard.equals(card)){
-                deck.remove(card);
-            }
-        }
+        deck.remove(card);
     }
 
     public void removeCard(String card){
-        for(int i = 0; i < deck.size(); i++){
-            if(deck.get(i).toString().equals(card)){
-                deck.remove(i);
-            }
-        }
+        Card removableCard = new Card(card);
+        deck.remove(removableCard);
     }
 
     public void shuffle(){

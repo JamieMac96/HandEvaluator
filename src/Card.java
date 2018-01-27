@@ -46,6 +46,8 @@ public class Card {
     }
 
     public Card(String card){
+        initializeSets();
+
         String tempValue = card.substring(0, card.length() - 1);
         String tempSuit = card.substring(card.length() - 1, card.length());
 
@@ -64,11 +66,18 @@ public class Card {
         return value;
     }
 
+    // We use the unicode characters to display the suits
+    // Eg the spades symbol = '\u2660'
     @Override
     public String toString(){
-        char suitChar = (char)'\u2660';
+
+        // Default value for initialization
+        char suitChar = '\u0000';
 
         switch (suit){
+            case SPADES:
+                suitChar = (char)'\u2660';
+                break;
             case CLUBS:
                 suitChar = (char)'\u2663';
                 break;
@@ -77,6 +86,7 @@ public class Card {
                 break;
             case HEARTS:
                 suitChar = (char)'\u2764';
+                break;
         }
 
         return value + suitChar;
