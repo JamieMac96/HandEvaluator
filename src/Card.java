@@ -1,21 +1,22 @@
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Arrays;
-import java.util.Set;
+import java.util.*;
 
 public class Card {
 
-    // The value and suit of the card
+    // The value and suit of the card.
     private final String value;
     private final String suit;
 
-    // Sets that contain all of the valid values and suits
-    // Used to validate the values passed to the constructor
-    private Set<String> validValues;
+    // The keys of this map are the string values associated with each card
+    // value. Ie ace = "A". The values of this map are numbers indicating
+    // the value of the card. eg ace = 1, 2 = 2, jack = 11
+    private Map<String, Integer> validValues;
+
+    // The set of suits is used to validate that when a card is created
+    // A valid suit has been specified.
     private Set<String> validSuits;
 
     // Publically declare the strings that represent
-    // the suits and values to ease use of the class
+    // the suits and values to ease use of the class.
     public static final String ACE = "A";
     public static final String TWO = "2";
     public static final String THREE = "3";
@@ -38,7 +39,7 @@ public class Card {
     public Card(String value, String suit){
         initializeSets();
 
-        if(!validValues.contains(value)) throw new IllegalArgumentException(value);
+        if(!validValues.containsKey(value)) throw new IllegalArgumentException(value);
         if(!validSuits.contains(suit)) throw new IllegalArgumentException(suit);
 
         this.value = value;
@@ -51,7 +52,7 @@ public class Card {
         String tempValue = card.substring(0, card.length() - 1);
         String tempSuit = card.substring(card.length() - 1, card.length());
 
-        if(!validValues.contains(tempValue)) throw new IllegalArgumentException(tempValue);
+        if(!validValues.containsKey(tempValue)) throw new IllegalArgumentException(tempValue);
         if(!validSuits.contains(tempSuit)) throw new IllegalArgumentException(tempSuit);
 
         this.value = tempValue;
@@ -64,6 +65,10 @@ public class Card {
 
     public String getValue(){
         return value;
+    }
+
+    public int getIntValue(){
+        return validValues.get(value);
     }
 
     // We use the unicode characters to display the suits
@@ -114,9 +119,14 @@ public class Card {
         String [] suitsArray =  {SPADES, CLUBS, DIAMONDS, HEARTS};
         String [] valuesArray = {ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN,
                                  EIGHT, NINE, TEN, JACK, QUEEN, KING};
+        int [] valueInts = {14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 
 
-        validSuits = new HashSet(Arrays.asList(suitsArray));
-        validValues = new HashSet(Arrays.asList(valuesArray));
+        validValues = new HashMap<>();
+        validSuits = new HashSet<>(Arrays.asList(suitsArray));
+
+        for(int i = 0; i < valuesArray.length; i++){
+            validValues.put(valuesArray[i], valueInts[i]);
+        }
     }
 }

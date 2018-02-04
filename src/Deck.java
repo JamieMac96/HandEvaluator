@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 import java.util.Collections;
+import java.util.List;
 
 public class Deck {
 
@@ -14,7 +15,10 @@ public class Deck {
     }
 
     public void removeCard(Card card){
-        deck.remove(card);
+        if(!deck.remove(card)){
+            throw new IllegalArgumentException("Could not remove card: "
+                                               + card);
+        }
     }
 
     public void removeCard(String card){
@@ -29,6 +33,25 @@ public class Deck {
     @Override
     public String toString(){
         return deck.toString();
+    }
+
+    public static void sortByValue(List<Card> deck){
+        // Using insertion sort as the input data size will be small
+        // most of the time
+        // Making insertion sort the best job for this task.
+
+        for (int i=1; i < deck.size(); i++)
+        {
+            int index = deck.get(i).getIntValue();
+            Card cardIndex = deck.get(i);
+            int j = i;
+            while (j > 0 && deck.get(j-1).getIntValue() > index)
+            {
+                deck.set(j, deck.get(j-1));
+                j--;
+            }
+            deck.set(j, cardIndex);
+        }
     }
 
     private void initializeDeck(){
